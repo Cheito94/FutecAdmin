@@ -1,0 +1,55 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <br>
+            <h2 style="text-align: center;">Nueva Categoría</h2>
+            <div>
+                <form action="{% url 'crearCategoria' %}" method="POST" enctype="multipart/form-data" id="frm_nueva_categoria">
+                    {% csrf_token %}
+                    <label for="nombre"><b>Nombre de la Categoría:</b></label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ingrese el nombre de la categoría" required>
+                    
+                    <label for="descripcion"><b>Descripción:</b></label>
+                    <textarea name="descripcion" id="descripcion" class="form-control" placeholder="Ingrese una descripción (Opcional)"></textarea>
+                    
+                    <label for="tipos"><b>Tipos:</b></label>
+                    <div id="tipos-container">
+                        <div class="input-group mb-2">
+                            <input type="text" name="tipos[]" class="form-control" placeholder="Ingrese un tipo (Ej: Tapas)">
+                            <button type="button" class="btn btn-outline-secondary" onclick="agregarTipo()">Agregar Otro Tipo</button>
+                        </div>
+                    </div>
+
+                    <br>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'listarCategorias' %}" class="btn btn-outline-secondary">Volver</a>
+                    <br><br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function agregarTipo() {
+        const tiposContainer = document.getElementById("tipos-container");
+        const newTipo = document.createElement("div");
+        newTipo.className = "input-group mb-2";
+        newTipo.innerHTML = `
+            <input type="text" name="tipos[]" class="form-control" placeholder="Ingrese un tipo">
+            <button type="button" class="btn btn-outline-danger" onclick="eliminarTipo(this)">Eliminar</button>
+        `;
+        tiposContainer.appendChild(newTipo);
+    }
+
+    function eliminarTipo(button) {
+        button.parentElement.remove();
+    }
+</script>
+
+{% endblock %}

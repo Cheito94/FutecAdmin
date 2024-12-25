@@ -1,0 +1,95 @@
+{% extends "./plantilla.html" %}
+
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>PRODUCTOS</b></h3>
+    </div>
+</div>
+<br>
+<div class="text-center">
+    <a href="{% url 'crearProducto' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Agregar Producto</a>
+</div>
+<div class="container">
+    <table class="table table-bordered table-striped table-hover" id="tbl-productos">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Imágen</th>
+                <th>Categoría</th>
+                <th>Peso/Tipo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.id }}</td>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.precio }}</td>
+                    <td>{{ producto.descripcion }}</td>
+                    <td>
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" height="100px" width="100px">
+                        {% else %}
+                            No hay foto disponible
+                        {% endif %}
+                    </td>
+                    <td>{{ producto.categoria.nombre }}</td>
+                    <td>
+                        <!-- Aquí mostramos el tipo correspondiente al producto, que es dinámico -->
+                        {% if producto.tipo %}
+                            {{ producto.tipo.nombre }}  <!-- Si tiene tipo, mostramos el nombre del tipo -->
+                        {% else %}
+                            N/A  <!-- Si no tiene tipo, mostramos N/A -->
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'editarProducto' producto.id %}" class="btn btn-success">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </a>
+                        <!-- Botón modal -->
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" onclick="setDeleteUrl({{ producto.id }})">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Confirmación de modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar este producto?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para establecer la URL de eliminación
+function setDeleteUrl(productoId) {
+    const deleteUrl = "{% url 'eliminarProducto' 0 %}".replace("0", productoId);
+    document.getElementById("confirmDeleteBtn").setAttribute("href", deleteUrl);
+}
+
+// Inicializar la tabla con DataTables
+let table = new DataTable('#tbl-productos');
+</script>
+{% endblock %}

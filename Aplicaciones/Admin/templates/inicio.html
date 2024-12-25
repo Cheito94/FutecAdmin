@@ -1,0 +1,66 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block body %}
+
+<div class="text-center my-4">
+    <img src="{% static 'img/futec.jpg' %}" class="img-fluid" style="max-height: 500px; width: auto;">
+    <h2 class="mt-3"><b>CATEGORIAS DE PRODUCTOS</b></h2>
+    <hr class="border-top border-3 border-warning w-50 mx-auto">
+</div>
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{% url 'listarCategorias' %}">
+                <img src="{% static 'img/imagenEmpresa.jpg' %}" class="img-fluid zoom mb-2">
+            </a>
+            <br><br>
+            <h3>CONTRAPESOS</h3>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'listarCategorias' %}">
+                <img src="{% static 'img/imagenEmpresa.jpg' %}" class="img-fluid zoom mb-2">
+            </a>
+            <br><br>
+            <h3>ALCANTARILLADO</h3>
+        </div>
+    </div>
+</div>
+
+<hr class="border-top border-3 border-primary w-75 mx-auto">
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-md-12">
+            <h2><b>Misión</b></h2>
+            <p class="text-justify">
+                Consorcio Fundiciones Industriales, más conocida como FUTEC,
+                es una empresa que cuenta con 7 colaboradores, esta nace en el
+                2014 cuando su empresa madre FINSA, en Colombia, le surge la
+                necesidad de abrir nuevos mercados y buscar nuevos horizontes.
+            </p>
+            <p class="text-justify">
+                Su planta industrial está ubicada en el cantón Latacunga-Lasso,
+                tenemos una capacidad de fundición 40 toneladas mensuales y fabricamos
+                diferentes piezas en hierro gris y nodular para suplir las necesidades
+                del mercado.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .zoom {
+        width: 100%;
+        max-width: 250px;
+        height: 150px;
+        object-fit: cover;
+        transition: transform 0.5s;
+    }
+
+    .zoom:hover {
+        transform: scale(1.25);
+    }
+</style>
+
+{% endblock %}

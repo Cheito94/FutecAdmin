@@ -1,0 +1,70 @@
+{% extends "plantilla.html" %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4"></div>
+            <div class="col-md-4">
+            <br>
+            <h2 class="text-center">Agregar Producto</h2>
+            <div>
+                <form action="{% url 'crearProducto' %}" method="POST" enctype="multipart/form-data" id="frm_nuevo_producto">
+                    {% csrf_token %}
+                    <label for="nombre">Nombre del producto</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ingrese el nombre del producto"  required>
+                    <br>
+                    <label for="precio">Precio</label>
+                    <input type="number" step="0.01" name="precio" class="form-control" placeholder="Ingrese el precio del producto"  required>
+                    <br>
+                    <label for="descripcion">Descripción</label>
+                    <textarea name="descripcion" id="descripcion" class="form-control" placeholder="Ingrese una descripción del producto"></textarea>
+                    <br>
+                    <label for="imagen">Imagen</label>
+                    <input type="file" name="imagen" id="imagen" class="form-control">
+                    <br>
+                    <label for="categoria">Categoría</label>
+                    <select class="form-control" name="categoria" id="categoria" required>
+                        <option value="">Selecciona una categoría</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <label for="tipo">Tipo</label>
+                    <select class="form-control" name="tipo" id="tipo" required>
+                        <option value="">Selecciona un tipo</option>
+                    </select>
+                    <br>
+                    
+                    <button type="submit" class="btn btn-primary">Guardr Producto</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="{% url 'listarProductos' %}" class="btn btn-outline-secondary">Volver</a>
+                </form>
+                <br><br>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Actualiza los tipos según la categoría seleccionada
+    document.getElementById('categoria').addEventListener('change', function() {
+        const categoriaId = this.value;
+        const tipoSelect = document.getElementById('tipo');
+
+        // Limpiar las opciones de tipo
+        tipoSelect.innerHTML = '<option value="">Selecciona un tipo</option>';
+
+        if (categoriaId) {
+            fetch(`/obtenerTipos/${categoriaId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    data.tipos.forEach(tipo => {
+                        const option = document.createElement('option');
+                        option.value = tipo.id;
+                        option.textContent = tipo.nombre;
+                        tipoSelect.appendChild(option);
+                    });
+                });
+        }
+    });
+</script>
+{% endblock %}

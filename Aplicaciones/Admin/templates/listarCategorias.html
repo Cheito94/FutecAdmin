@@ -1,0 +1,82 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>CATEGORÍAS</b></h3>
+    </div>
+</div>
+<br>
+<div class="text-center">
+    <a href="{% url 'crearCategoria' %}" class="btn btn-outline-info"><i class="fas fa-plus"></i> Agregar Categoría</a>
+</div>
+<div class="container">
+    <table class="table table-bordered table-striped table-hover" id="tbl-categorias">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Tipos</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for categoria in categorias %}
+            <tr>
+                <td>{{ categoria.id }}</td>
+                <td>{{ categoria.nombre }}</td>
+                <td>
+                    <!-- Mostrar los tipos asociados a la categoría -->
+                    {% if categoria.tipos.all %}
+                        {% for tipo in categoria.tipos.all %}
+                            <span>{{ tipo.nombre }}</span>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span>No tiene tipos asociados</span>
+                    {% endif %}
+                </td>
+                <td>{{ categoria.descripcion }}</td>
+                <td>   
+                    <!-- Botón para abrir el modal -->
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" onclick="setDeleteUrl({{ categoria.id }})">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar esta categoría?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para establecer la URL de eliminación
+function setDeleteUrl(categoriaId) {
+    const deleteUrl = "{% url 'eliminarCategoria' 0 %}".replace("0", categoriaId);
+    document.getElementById("confirmDeleteBtn").setAttribute("href", deleteUrl);
+}
+
+// Inicializar la tabla con DataTables
+let table = new DataTable('#tbl-categorias');
+</script>
+
+{% endblock %}
